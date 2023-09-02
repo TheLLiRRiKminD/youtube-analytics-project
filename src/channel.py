@@ -1,8 +1,6 @@
-import os
+import os, json
 from googleapiclient.discovery import build
-import json
 from dotenv import load_dotenv
-
 
 class Channel:
     """Класс для ютуб-канала"""
