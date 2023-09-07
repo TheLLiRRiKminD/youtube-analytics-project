@@ -1,5 +1,4 @@
 import datetime, os, isodate
-
 from dotenv import load_dotenv
 from googleapiclient.discovery import build
 
@@ -19,14 +18,13 @@ class APIMixin:
 
 
 class PlayList(APIMixin):
-    """Класс для работы в плей-листами ютуба."""
+    """Класс для работы с плей-листами ютуба."""
 
     def __init__(self, playlist_id: str) -> None:
         """Инициализируем id плейлиста и результатами запроса по API."""
         self.__playlist_id = playlist_id
         self._init_from_api()
-        self.__playlist_videos = APIMixin.get_service().playlistItems().list(playlistId=playlist_id,
-                                                               part='contentDetails', maxResults=50, ).execute()
+
 
     def _init_from_api(self) -> None:
         """Получаем данные по API и инициализируем ими экземпляр класса."""
@@ -35,7 +33,8 @@ class PlayList(APIMixin):
                                                             ).execute()
         self.title = playlist_info['items'][0]['snippet']['title']
         self.url = f'https://www.youtube.com/playlist?list={self.__playlist_id}'
-
+        self.__playlist_videos = self.get_service().playlistItems().list(playlistId=self.__playlist_id,
+                                                               part='contentDetails', maxResults=50, ).execute()
     @property
     def total_duration(self) -> datetime.timedelta:
         """Возвращает суммарную длительность плей-листа в формате 'datetime.timedelta' (hh:mm:ss))."""
